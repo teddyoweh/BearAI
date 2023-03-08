@@ -144,4 +144,14 @@ class KNN:
 # y = [(2*i)+1 for i in x]
 # lin.fit(x,y)
 # print(y)
-# print(lin.predict(9))
+# print(lin.predict(9)
+
+
+
+
+y2=6
+y1=4
+x2=3
+x1=2
+
+m 
