@@ -61,7 +61,7 @@ class Logistic:
         y_pred[y_pred < 0.5] = 0
         return y_pred.ravel().tolist()
 
-class Tokenizer:
+class TokenizerGen:
     def __init__(self):
         self.word_count = Counter()
     
@@ -83,7 +83,14 @@ class Tokenizer:
             X_transformed.append(x)
         return X_transformed
     
-
+class Tokenizer:
+    def __init__(self, text):
+        self.tokens = self.tokenize(text)
+        self.all_tokens = set(self.tokens)
+        self.vector = np.array([self.tokens.count(token) for token in self.all_tokens])
+    
+    def tokenize(self, text):
+        return text.lower().split()
 
 
 class KNN:
@@ -106,29 +113,7 @@ class KNN:
     
 # import numpy as np
 # from nltk.tokenize import word_tokenize
-
-# class WordSimilarityPredictor:
-   
-#     def __init__(self, word_embeddings):
-      
-#         self.word_embeddings = word_embeddings
-    
-#     def tokenize(self, sentence):
-     
-#         return Tokenizer(sentence)
-#     def cosine_similarity(u, v):
-    
-#         numerator = np.dot(u, v)
-#         denominator = np.sqrt(np.dot(u, u)) * np.sqrt(np.dot(v, v))
-#         return numerator / denominator
-#     def predict_similarity(self, word1, word2):
  
-#         if word1 not in self.word_embeddings or word2 not in self.word_embeddings:
-#             return None
-        
-#         embedding1 = self.word_embeddings[word1]
-#         embedding2 = self.word_embeddings[word2]
-#         return self.cosine_similarity(embedding1, embedding2)
 
 # x_train = [[1, 2], [2, 3], [3, 8], [4, 9]]
 # y_train = [0, 0, 1, 1]
@@ -146,11 +131,36 @@ class KNN:
 # print(y)
 # print(lin.predict(9)
 
+ 
+ 
+text1='teddy goes to the gym to code'
+text2='teddy code in the gym'
+class CosineSimilarity:
+    def __init__(self, text1: str, text2: str):
+        self.tokens1 = text1.lower().split()
+        self.tokens2 = text2.lower().split()
+        self.all_tokens = set(self.tokens1 + self.tokens2)
+        self.vector1 = np.array([self.tokens1.count(token) for token in self.all_tokens])
+        self.vector2 = np.array([self.tokens2.count(token) for token in self.all_tokens])
 
+    @property
+    def value(self) -> float:
+        dot = np.dot(self.vector1, self.vector2)
+        norm_x = np.linalg.norm(self.vector1)
+        norm_y = np.linalg.norm(self.vector2)
+        return dot / (norm_x * norm_y)
 
+    def get_similar_words(self, threshold: float) -> list[str]:
+        similar_words = []
+        for token in set(text1.lower().split() + text2.lower().split()):
+            count1 = self.vector1[list(self.vector1).index(self.tokens1.count(token))]
+            count2 = self.vector2[list(self.vector2).index(self.tokens2.count(token))]
+            if count1 * count2 > 0 and (count1 * count2) / (np.linalg.norm(count1) * np.linalg.norm(count2)) >= threshold:
+                similar_words.append(token)
+        return similar_words
+ 
 
-y2=6
-y1=4
-x2=3
-x1=2
+csn = CosineSimilarity(text1, text2)
+print(csn.value)
+print(csn.get_similar_words(0.0))
 
