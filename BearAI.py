@@ -88,9 +88,9 @@ class Tokenizer:
         self.tokens = self.tokenize(text)
         self.all_tokens = set(self.tokens)
         self.vector = np.array([self.tokens.count(token) for token in self.all_tokens])
-    
-    def tokenize(self, text):
-        return text.lower().split()
+    @property
+    def tokenize(self):
+        return self.vector
 
 
 class KNN:
@@ -160,7 +160,7 @@ class CosineSimilarity:
         return similar_words
  
 
-csn = CosineSimilarity(text1, text2)
-print(csn.value)
-print(csn.get_similar_words(0.0))
+# csn = CosineSimilarity(text1, text2)
+# print(csn.value)
+# print(csn.get_similar_words(0.0))
 
